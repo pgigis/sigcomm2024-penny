@@ -21,7 +21,7 @@ sudo apt install cmake g++ python3 gnuplot
 ```
 
 ##### Install Python Dependencies
-To install the required Python dependencies, we recommend setting up a virtual environment. 
+To install the required Python dependencies, we recommend setting up a virtual environment. After that, run:
 ```bash
 pip3 install -r requirements.txt
 ```
@@ -29,7 +29,7 @@ pip3 install -r requirements.txt
 If you encounter any issues with the installation or find that a required dependency is missing, please contact at p.gkigkis (at) cs.ucl.ac.uk for assistance.
 
 
-#### Step 2: Install our NS-3 Simulator
+#### Step 2: Install the custom NS-3 Simulator
 
 Before installing the ns-3 simulator, please ensure that you have installed the necessary dependencies as outlined in the previous steps. It is essential to use the provided version of the ns-3 simulator (version 3.40) because we have made modifications to the simulator core to enable packet drops and random link loss.
 
