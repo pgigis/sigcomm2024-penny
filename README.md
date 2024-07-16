@@ -158,14 +158,12 @@ python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixedEqual,tempResults/
 python3 pyscripts/plotAccuracy.py -f tempResults/accuracyOnlyNotClosedLoop -o plots/accuracyOnlyNotClosedLoop.png
 ```
 
-**Note:** For Figure 8b, we generate figures using two modes:
-1.  The non-closed-loop flows do not send any duplicates.
-2.  The non-closed-loop flows send duplicates at a rate of 14.9%.
-
-You can plot the individual modes using the following commands:
+**Note:** For Figure 8b, you can also generate figures for the two individual scenarios:
+1.  The not closed-loop flows do not send any duplicates.
 ```bash
 python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixedEqual -o plots/accuracyMixedEqual.png
 ```
+2.  The not closed-loop flows send duplicates at a rate of 14.9%.
 ```bash
 python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixedEqualWithDup -o plots/accuracyMixedEqualWithDup.png
 ```
