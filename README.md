@@ -1,5 +1,3 @@
-
-
 # _"Bad Packets Come Back, Worse Ones Don't"_
 
 **Table of Contents:**
@@ -126,60 +124,50 @@ cd ns3-simulations
  - For the simulations, we recommend conducting at least 500 experiments. 
 
  - Due to the randomness in the simulation process and the number of executions, the generated figures may exhibit minor differences.
-
-### Figure 8a
-
 #### Step 1: Run the Experiments
-Execute the following command to start the simulations for Figure 8a. Replace `<number_of_parallel_runs>` and `<number_of_experiments>` with the appropriate values for your setup: 
+
+Execute the following command to start the simulations for Figure 8. Replace `<number_of_parallel_runs>` and `<number_of_experiments>` with the appropriate values for your setup: 
+
+####  Figure 8a - Only closed-loop flows
 ```bash
 bash experiments/figure8a.sh <number_of_parallel_runs> <number_of_experiments> 
+```
+#### Figure 8b - Mixed 50/50 closed-loop/not closed loop flows
+```bash
+bash experiments/figure8b.sh <number_of_parallel_runs> <number_of_experiments> 
+```
+
+#### Figure 8c - Only not closed-loop
+```bash
+bash experiments/figure8c.sh <number_of_parallel_runs> <number_of_experiments> 
 ```
 
 #### Step 2: Plot the Results
 To generate the plot for Figure 8a execute the following command:
+
+#### Figure 8a - Only closed-loop flows
 ```bash
 python3 pyscripts/plotAccuracy.py -f tempResults/accuracyOnlyClosedLoop -o plots/accuracyOnlyClosedLoop.png
 ```
-After running the command above, you will find the generated figure `accuracyOnlyClosedLoop.png` in the `plots` directory.
-
-### Figure 8b
-
-#### Step 1: Run the Experiments
-Execute the following command to start the simulations for Figure 8b. Replace `<number_of_parallel_runs>` and `<number_of_experiments>` with the appropriate values for your setup:
-```bash
-bash experiments/figure8b.sh <number_of_parallel_runs> <number_of_experiments>
-```
-**Note:** For this figure, we run two modes:
-1.  The non-closed-loop flows do not send any duplicates.
-2.  The non-closed-loop flows send duplicates at a rate of 14.9%.
-
-#### Step 2: Plot the Results
-To generate the plot for Figure 8b execute the following command:
+#### Figure 8b - Mixed 50/50 closed-loop/not closed loop flows
 ```bash
 python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixedEqual,tempResults/accuracyMixedEqualWithDup -o plots/accuracyMixedClosedNotClosedLoops.png
 ```
-After running the command above, you will find the generated figure `accuracyMixedClosedNotClosedLoops.png` in the `plots` directory.
-
-You can also plot the individual modes using the following commands:
-```bash
-python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixedEqual -o plots/accuracyMixedEqual.png
-python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixedEqualWithDup -o plots/accuracyMixedEqualWithDup.png
-```
-
-### Figure 8c
-
-#### Step 1: Run the Experiments
-Execute the following command to start the simulations for Figure 8c. Replace `<number_of_parallel_runs>` and `<number_of_experiments>` with the appropriate values for your setup:
-```bash
-bash experiments/figure8c.sh <number_of_parallel_runs> <number_of_experiments>
-```
-
-#### Step 2: Plot the Results
-To generate the plot for Figure 8c execute the following command:
+#### Figure 8c - Only not closed-loop
 ```bash
 python3 pyscripts/plotAccuracy.py -f tempResults/accuracyOnlyNotClosedLoop -o plots/accuracyOnlyNotClosedLoop.png
 ```
-After running the command above, you will find the generated figure `accuracyOnlyNotClosedLoop.png` in the `plots` directory.
 
+**Note:** For Figure 8b, we generate figures using two modes:
+1.  The non-closed-loop flows do not send any duplicates.
+2.  The non-closed-loop flows send duplicates at a rate of 14.9%.
+
+You can plot the individual modes using the following commands:
+```bash
+python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixedEqual -o plots/accuracyMixedEqual.png
+```
+```bash
+python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixedEqualWithDup -o plots/accuracyMixedEqualWithDup.png
+```
 
 ### Reproducing Performance Results
