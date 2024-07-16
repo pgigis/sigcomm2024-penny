@@ -7,6 +7,7 @@
     * [NS-3 Simulations](#ns-3-simulations)
         * [Reproducing Accuracy Results](#reproducing-accuracy-results)
         * [Reproducing Perfomance Results](#reproducing-performance-results)
+
 ## Prerequisites and Installation Instructions
 The artifacts software is developed using C++ and Python3. Before proceeding with the installation, please ensure the following dependencies are installed on your system:
 
@@ -18,27 +19,9 @@ For Debian/Ubuntu-based distributions execute the following commands:
 sudo apt update
 sudo apt install cmake g++ python3 gnuplot
 ```
-####  Step 2: Set Up a Python Virtual Environment
-After successfully installing Python3, it is recommended to isolate the installation and execution of dependencies from other parts of your system by using a virtual environment. This can be done using the venv module in Python3.
-
-Follow the instructions below to set up a virtual environment and install the additional Python dependencies:
-
-##### Create a Virtual Environment
-Open a terminal and navigate to your project directory. Then, execute the following command to create a virtual environment named `venv`:
-
-```bash
-python3 -m venv venv
-```
-
-##### Activate the Virtual Environment
-Activate the virtual environment using the following command (On Linux/macOS):
-```bash
-source venv/bin/activate
-```
 
 ##### Install Python Dependencies
-With the virtual environment activated, execute the following command to install the additional Python dependencies:
-
+To install the required Python dependencies, we recommend setting up a virtual environment. 
 ```bash
 pip3 install -r requirements.txt
 ```
@@ -46,8 +29,7 @@ pip3 install -r requirements.txt
 If you encounter any issues with the installation or find that a required dependency is missing, please contact at p.gkigkis (at) cs.ucl.ac.uk for assistance.
 
 
-
-#### Step 3: Install our NS-3 Simulator
+#### Step 2: Install our NS-3 Simulator
 
 Before installing the ns-3 simulator, please ensure that you have installed the necessary dependencies as outlined in the previous steps. It is essential to use the provided version of the ns-3 simulator (version 3.40) because we have made modifications to the simulator core to enable packet drops and random link loss.
 
