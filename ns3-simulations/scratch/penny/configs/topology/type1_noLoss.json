@@ -1,0 +1,19 @@
+{	
+	"id": "type1noLoss",
+	"topology": {
+		"bottleneck": {
+			"bandwidth": "10Mbps",
+			"delay": "20ms"
+		},
+		"access": {
+			"bandwidth": "20Mbps",
+			"delay": "15ms"
+		},
+		"serializationDelay": "5.3ms",
+		"linkErrorRate": {
+			"upstream": -1,
+			"downstream": -1
+		},
+		"qdiscTypeId": "ns3::PFifoFastQueueDisc"
+	}
+}

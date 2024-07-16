@@ -1,0 +1,17 @@
+{
+	"id": "default",
+	"penny": {
+		"dropProbability": 0.04,
+		"maxDuplicates": 0.15,
+		"probabilityNotObserveRetransmission": 0.05,
+		"timeouts": {
+			"dropExpiration": 3.0
+		},
+		"execution": {
+			"minClosedLoopFlows": 0,
+			"minPacketDrops": 0,
+			"minDroppablePkts": 300,
+			"maxPacketDrops": 30
+		}
+	}
+}

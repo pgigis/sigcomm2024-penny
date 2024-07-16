@@ -1,0 +1,48 @@
+{
+	"simulation": {
+		"startTCPconn": 0.05,
+		"stopSimulation": 240.0,
+		"stopIfPennyFinishes": true
+	},
+	"experiment": {
+		"folder": "accuracyMixedEqualWithDup",
+		"enablePenny": true,
+		"closedLoop": {
+			"enabled": true,
+			"numberOfFlows": 10,
+			"numberOfPackets": 1000
+		},
+		"backgroundTraffic": {
+			"enabled": false,
+			"numberOfFlows": 0,
+			"numberOfPackets": -1
+		},
+		"ignoreClosedLoop": {
+			"enabled": false
+		},
+		"spoofedFlows": {
+			"enabled": true,
+			"numberOfFlows": 100,
+			"numberOfPackets": 1000,
+			"duplicationRate": 0.149
+		},
+		"closedLoopToSpoofedRatio": "50:50"
+	},
+	"tcp": {
+		"segmentSize": 1024,
+		"delAckCount": 2,
+		"delAckTimeout": "200ms",
+		"initialCwnd": 10,
+		"minRTO": 1.0,
+		"isSACKenabled": true,
+		"recoveryType": "ns3::TcpClassicRecovery",
+		"socketFactory": "ns3::TcpSocketFactory",
+		"variantId": "ns3::TcpCubic"
+	},
+	"other": {
+		"expectedPacketSize": 1078,
+		"traces": {
+			"enabled": false
+		}
+	}
+}

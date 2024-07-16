@@ -31,9 +31,9 @@ gnuplot -persist paper-results/plot.gp
 #rm -rf tempFiles
 
 echo "Creating results directory..."
-mkdir -p ../results
+mkdir -p results
 	
 echo "Moving generated pdfs..."
-mv *.pdf ../results
+mv *.pdf results
 
 echo "Script execution completed."
