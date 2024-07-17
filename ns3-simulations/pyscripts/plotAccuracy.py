@@ -53,36 +53,43 @@ def extract_data(folder_name):
     """
     data = {'x': [], 'y': [], 'z': []}
 
+    folders = []
+    if ',' in folder_name:
+        folders = folder_name.split(',')
+    else:
+        folders = [folder_name]
+
     # Iterate through each file in the folder
-    for filename in os.listdir(folder_name):
-        file_path = os.path.join(folder_name, filename)
-        if os.path.isfile(file_path):
-            try:
-                # Open and read JSON data
-                with open(file_path, 'r') as f:
-                    data_json = json.load(f)
-                    if 'snapshots' in data_json:
-                        for drop in data_json['snapshots']:
-                            eval_result = evaluate_hypotheses(drop['counters'])
-                            droppable_pkts = int(drop['counters']['droppablePkts'])
-                            dropped_pkts = int(drop['counters']['droppedPkts'])
-                            
-                            # Append data based on evaluation result
-                            if eval_result == 'spoofed':
-                                data['x'].append(droppable_pkts)
-                                data['z'].append(2)
-                                data['y'].append(dropped_pkts - 0.50)
-                            elif eval_result == 'closed-loop':
-                                data['x'].append(droppable_pkts)
-                                data['z'].append(0)
-                                data['y'].append(dropped_pkts - 0.25)
-                            elif eval_result == 'duplicateExceeded':
-                                data['x'].append(droppable_pkts)
-                                data['z'].append(1)
-                                data['y'].append(dropped_pkts - 0.75)
-            except Exception as e:
-                print(f"Couldn't process '{file_path}': {e}")
-    return data
+    for folder in folders:
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
+            if os.path.isfile(file_path):
+                try:
+                    # Open and read JSON data
+                    with open(file_path, 'r') as f:
+                        data_json = json.load(f)
+                        if 'snapshots' in data_json:
+                            for drop in data_json['snapshots']:
+                                eval_result = evaluate_hypotheses(drop['counters'])
+                                droppable_pkts = int(drop['counters']['droppablePkts'])
+                                dropped_pkts = int(drop['counters']['droppedPkts'])
+
+                                # Append data based on evaluation result
+                                if eval_result == 'spoofed':
+                                    data['x'].append(droppable_pkts)
+                                    data['z'].append(2)
+                                    data['y'].append(dropped_pkts - 0.50)
+                                elif eval_result == 'closed-loop':
+                                    data['x'].append(droppable_pkts)
+                                    data['z'].append(0)
+                                    data['y'].append(dropped_pkts - 0.25)
+                                elif eval_result == 'duplicateExceeded':
+                                    data['x'].append(droppable_pkts)
+                                    data['z'].append(1)
+                                    data['y'].append(dropped_pkts - 0.75)
+                except Exception as e:
+                    print(f"Couldn't process '{file_path}': {e}")
+        return data
 
 def plot_figure(data, filename):
     """
@@ -128,13 +135,7 @@ def main():
     parser.add_argument('-o', dest='output_file', help="The filename output.", type=str, required=True)
     args = parser.parse_args()
 
-    data = []
-    if ',' in args.folder_name:
-        filesToRead = args.folder_name.split(',')
-        for file in filesToRead:
-            data = data + extract_data(args.folder_name)
-    else:
-        data = extract_data(args.folder_name)
+    data = extract_data(args.folder_name)
 
     plot_figure(data, args.output_file)
 

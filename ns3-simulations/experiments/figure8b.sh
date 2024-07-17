@@ -49,10 +49,10 @@ mkdir -p ../tempResults/accuracyMixedEqualWithDup/
 
 
 for seed in $(seq 1 "$execution_runs"); do
-    for topologyType in type1_noLoss.json type1_LossBoth1.json type1_LossBoth3.json type1_LossBoth6.json type1_LossBoth9.json type1_LossBoth12.json \
-                        type1_LossUpstream1.json type1_LossUpstream3.json type1_LossDownstream6.json type1_LossUpstream9.json type1_LossDownstream12.json \
-                        type1_LossDownstream1.json type1_LossDownstream3.json type1_LossUpstream6.json type1_LossDownstream9.json type1_LossUpstream12.json; do
-        
+    for topologyType in type1_noLoss.json type1_LossBoth1.json type1_LossBoth3.json type1_LossBoth6.json \
+                        type1_LossUpstream1.json type1_LossUpstream3.json type1_LossDownstream6.json \
+                        type1_LossDownstream1.json type1_LossDownstream3.json type1_LossUpstream6.json; do
+
         for pennyConf in drop1_min300pkts.json drop2_min300pkts.json drop3_min300pkts.json drop4_min300pkts.json drop5_min300pkts.json; do
 
             check_process_instances
