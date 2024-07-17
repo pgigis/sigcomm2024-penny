@@ -1,5 +1,5 @@
 {
-	"id": "default",
+	"id": "drop5_min300pkts",
 	"penny": {
 		"dropProbability": 0.05,
 		"maxDuplicates": 0.15,
