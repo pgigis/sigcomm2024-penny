@@ -83,7 +83,7 @@ Upon successful execution of the script, you will find the following two plots i
 
 
 ### NS-3 Simulations
-For the evaluation, we used NS-3 simulator (version 3.40). As part of the artifacts we provide a lightweight implementation of Penny in C++. We plan to release a full open-source version of Penny soon.
+For the evaluation, we used NS-3 simulator (version 3.40). As part of the artifacts we provide a lightweight implementation of Penny in C++. 
 
 You can find the source code for the lightweight implementation of Penny in the following directory:
 `ns3-simulations/scratch/penny`.
