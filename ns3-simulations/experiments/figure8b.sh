@@ -25,7 +25,7 @@ check_process_instances() {
     done
 }
 
-mkdir -p ../tempResults/accuracyMixedEqual/
+mkdir -p tempResults/accuracyMixedEqual/
 
 for seed in $(seq 1 "$execution_runs"); do
     for topologyType in type1_noLoss.json type1_LossBoth1.json type1_LossBoth3.json type1_LossBoth6.json \
