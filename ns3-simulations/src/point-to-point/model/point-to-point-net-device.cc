@@ -30,6 +30,7 @@
 #include "ns3/trace-source-accessor.h"
 #include "ns3/uinteger.h"
 
+#include "ns3/internet-module.h"
 /* Start of Penny artifact evaluation changes */
 #include "../../../scratch/penny/libs/random/random.h"
 
@@ -352,7 +353,14 @@ PointToPointNetDevice::TransmitStart(Ptr<Packet> p)
 
     if (is_random_loss_enabled)
     {
-        if (ProbabilisticPacketLinkLoss())
+        bool backgroundTraffic = false;
+        TcpHeader* pkt = (TcpHeader*)p->extractTcpHeader();
+        if(IsPortInRange(pkt->GetSourcePort(), 20000, 21000) || IsPortInRange(pkt->GetDestinationPort(), 20000, 21000))
+        {
+            backgroundTraffic = true;
+        }
+
+        if (ProbabilisticPacketLinkLoss() && !backgroundTraffic)
         {
             if (log_pkt_drops)
             {
