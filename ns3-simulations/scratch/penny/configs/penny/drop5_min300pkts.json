@@ -11,7 +11,8 @@
 			"minClosedLoopFlows": 2,
 			"minPacketDrops": 0,
 			"minDroppablePkts": 300,
-			"maxPacketDrops": 30
+			"maxPacketDrops": 30,
+			"aggrMinFlows": 0
 		}
 	}
 }

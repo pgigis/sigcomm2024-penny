@@ -1,4 +1,6 @@
-# _"Bad Packets Come Back, Worse Ones Don't"_
+
+# "Bad Packets Come Back, Worse Ones Don't"
+This repository contains the artifacts for our SIGCOMM '24 paper titled "Bad Packets Come Back, Worse Ones Don't."
 
 **Table of Contents:**
 * [Prerequisites and Installation Instructions](#prerequisites-and-installation-instructions)
@@ -7,14 +9,13 @@
     * [NS-3 Simulations](#ns-3-simulations)
         * [Reproducing Accuracy Results](#reproducing-accuracy-results)
         * [Reproducing Perfomance Results](#reproducing-performance-results)
+ * [Contact](#contact)
 
 ## Prerequisites and Installation Instructions
-The artifacts software is developed using C++ and Python3. Before proceeding with the installation, please ensure the following dependencies are installed on your system:
+The artifacts software is developed using C++ and Python3. **This software requires Ubuntu 22.04.4 LTS, as it has been tested on this platform.** Before proceeding with the installation, please ensure the following dependencies are installed on your system:
 
 #### Step 1: Install Basic Packages
 Open a terminal and execute the following commands to install `cmake`, `g++`,  `python3`, and `gnuplot`:
- 
-For Debian/Ubuntu-based distributions execute the following commands:
 ```bash
 sudo apt update
 sudo apt install cmake g++ python3 gnuplot
@@ -26,7 +27,7 @@ To install the required Python dependencies, we recommend setting up a virtual e
 pip3 install -r requirements.txt
 ```
 
-If you encounter any issues with the installation or find that a required dependency is missing, please contact at p.gkigkis (at) cs.ucl.ac.uk for assistance.
+If you encounter any issues with the installation or find that a required dependency is missing, please contact at `p.gkigkis (at) cs.ucl.ac.uk` for assistance.
 
 
 #### Step 2: Install the custom NS-3 Simulator
@@ -103,9 +104,10 @@ cd ns3-simulations
 
 **Notes:**
 
- - For the simulations, we recommend conducting at least 500 experiments. 
+ - For the simulations, we recommend conducting at least 500 runs.
 
  - Due to the randomness in the simulation process and the number of executions, the generated figures may exhibit minor differences.
+
 #### Step 1: Run the Experiments
 
 Execute the following command to start the simulations for Figure 8. Replace `<number_of_parallel_runs>` and `<number_of_experiments>` with the appropriate values for your setup: 
@@ -125,7 +127,7 @@ bash experiments/figure8c.sh <number_of_parallel_runs> <number_of_experiments>
 ```
 
 #### Step 2: Plot the Results
-To generate the plot for Figure 8a execute the following command:
+To generate the plots for Figure 8 execute the following commands:
 
 #### Figure 8a - Only closed-loop flows
 ```bash
@@ -151,3 +153,48 @@ python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixedEqualWithDup -o pl
 ```
 
 ### Reproducing Performance Results
+In this section, we provide detailed instructions on how to generate Figure 9 from the paper.
+
+To do this, first make sure that you are inside the `ns3-simulations` folder.
+
+**Notes:**
+ - For the simulations for figure 9a, we recommend conducting at least 400 experiments.
+
+ - For the simulations for figure 9b, we recommend conducting at least 1000 experiments.
+
+ - Running this minimum number of experiments will produce figures that follow the trends presented in the paper. Note that in the paper, we used 10,000 runs.
+
+ - Due to the randomness in the simulation process and the number of executions, the generated figures may exhibit minor differences.
+
+#### Step 1: Run the Experiments
+
+Execute the following command to start the simulations for Figure 9. Replace `<number_of_parallel_runs>` and `<number_of_experiments>` with the appropriate values for your setup: 
+
+####  Figure 9a - Performance impact on aggregates
+**Notes:**
+ - In this experiment, as we simulate multiple TCP flows as background traffic, the minimum requirements per experiment are `500 MB of disk space` and `2 GB of memory`.
+ - After the `.sh` script finishes, ensure that all `./ns3` instances have completed, as some may still be running in the background.
+
+```bash
+bash experiments/figure9a.sh <number_of_parallel_runs> <number_of_experiments>
+```
+
+#### Figure 9b - Performance impact on individual flow
+```bash
+bash experiments/figure9b.sh <number_of_parallel_runs> <number_of_experiments>
+```
+
+#### Step 2: Plot the Results
+To generate the plots for Figure 9 execute the following commands:
+
+#### Figure 9a - Performance impact on aggregates
+```bash
+python3 pyscripts/plotAggrPerf.py -f tempResults/aggregatesFlowPerformance -o plots/aggregatesFlowPerformance.png -p 1000
+```
+#### Figure 9b - Performance impact on individual flow
+```bash
+python3 pyscripts/plotIndivPerf.py -f tempResults/indivFlowPerformance -o plots/indivFlowPerformance.png -p 1000
+```
+
+## Contact
+For any questions or issues, please contact Petros Gigis at (`p.gkigkis (at) cs.ucl.ac.uk`).

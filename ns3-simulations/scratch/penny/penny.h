@@ -90,6 +90,9 @@ class penny
     /* Set the Penny and PennyFlow configuration. */
     void setConfiguration(json);
 
+    /* Get the number of tracked closed-loop flows. */
+    int getNumberOfTrackFlows();
+
     /* Pre-register spoofed flow. */
     void preregisterSpoofedFlow(std::string);
 

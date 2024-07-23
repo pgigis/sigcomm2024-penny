@@ -274,11 +274,17 @@ bool penny::isFlowTracked(std::string flowId)
     }
 }
 
+int penny::getNumberOfTrackFlows()
+{
+    return activeClosedLoopFlows.size();
+}
+
 void penny::trackNewFlow(std::string flowId)
 {
     pennyFlow newPennyFlowInstance;
     flowIdToPennyFlowMap[flowId] = newPennyFlowInstance;
     flowIdToPennyFlowMap[flowId].setConfiguration(pennyParams);
+    activeClosedLoopFlows.insert(flowId);
 }
 
 void penny::addPacketDropSnapshot(struct simplePacket pkt)

@@ -25,6 +25,8 @@ std::set<std::string> activeSpoofedFlows;
 
 bool stopIfPennyFinishes = false;
 
+int minNumberFlowsAggr = 0;
+
 void writeResults(const std::string& experimentFolder,
                   int argSeed,
                   double dropRate,
@@ -69,6 +71,12 @@ void processPacketNS3(Ptr<const Packet> packet)
             return;
         }
     }
+
+    if (pennyInstance.getNumberOfTrackFlows() < minNumberFlowsAggr)
+    {
+        return;
+    }
+
     std::list<struct simplePacket> pktsList;
 
     if (!ignoreLegitTraffic)
@@ -209,19 +217,20 @@ void BackgroundFlows(NodeContainer receiverNodeContainer,
 
     for (int i = 0; i < config["experiment"]["backgroundTraffic"]["numberOfFlows"].get<int>(); i++)
     {
+        double randomStartTimeBackground = Random::get<Random::common>(0.01, 0.2);
         // Install packet sink at receiver side
         InstallPacketSink(receiverNodeContainer.Get(0),
-                          20000,
+                          serverPort,
                           config["tcp"]["socketFactory"].get<std::string>(),
                           0.01);
 
         // Install BulkSend application
         InstallBulkSend(senderNodeContainer.Get(0),
                         routerToReceiverIPAddress.GetAddress(1),
-                        20000,
+                        serverPort,
                         config["tcp"]["socketFactory"].get<std::string>(),
                         senderNodeContainer.Get(0)->GetId(),
-                        0.1,
+                        randomStartTimeBackground,
                         maxBytesToSend);
         serverPort += 1;
     }
@@ -241,10 +250,18 @@ void PennyFlows(NodeContainer receiverNodeContainer,
         maxBytesToSend = 1024 * numberOfPackets;
     }
 
+    double waitForBackgroundTrafficToReachAIMD = 0.0;
+
+    if (config["experiment"]["backgroundTraffic"]["enabled"].get<bool>())
+    {
+        /* We experimentally found that the background traffic enters AIMD after 2 seconds. */
+        waitForBackgroundTrafficToReachAIMD = 2;
+    }
+
     for (int i = 0; i < config["experiment"]["closedLoop"]["numberOfFlows"].get<int>(); i++)
     {
         double startTimeWithOffset = config["simulation"]["startTCPconn"].get<double>() +
-                                     (double)Random::get<Random::common>(0.01, 0.2);
+                                     (double)Random::get<Random::common>(0.01, 0.2) + waitForBackgroundTrafficToReachAIMD;
         // Install packet sink at receiver side
         InstallPacketSink(receiverNodeContainer.Get(0),
                           server_port,
@@ -263,16 +280,21 @@ void PennyFlows(NodeContainer receiverNodeContainer,
     }
 }
 
+bool IsPortInRange(uint16_t port, uint16_t minPort, uint16_t maxPort) {
+    return port >= minPort && port <= maxPort;
+}
+
 void pennyCallback(Ptr<const Packet> packet)
 {
-    /* Forward only PennyFlows */
+    /* Ensure that only Penny's flows are forwarded. */
     if (pennyInstance.isEnabled() && pennyInstance.isRunning())
     {
-        /* Skip background Traffic */
+        /* Do not send background traffic to Penny. */
         TcpHeader* pkt = (TcpHeader*)packet->extractTcpHeader();
-        if ((pkt->GetSourcePort() >= 20000 && pkt->GetSourcePort() <= 21000) ||
-            (pkt->GetDestinationPort() >= 20000 && pkt->GetDestinationPort() <= 21000))
+        if (IsPortInRange(pkt->GetSourcePort(), 20000, 21000) || IsPortInRange(pkt->GetDestinationPort(), 20000, 21000))
+        {
             return;
+        }
         processPacketNS3(packet);
     }
     else
@@ -313,19 +335,15 @@ int main(int argc, char* argv[])
     json configData = json::parse(i);
     i.close();
 
-    // std::cout << "Parsed experiments config" << std::endl;
-
     std::ifstream k("scratch/penny/configs/topology/" + (std::string)argTopologyConf);
     json confTopo = json::parse(k);
     k.close();
-
-    // std::cout << "Parsed topology config" << std::endl;
 
     std::ifstream y("scratch/penny/configs/penny/" + (std::string)argPennyConf);
     json confPenny = json::parse(y);
     y.close();
 
-    // std::cout << "Parsed penny config" << std::endl;
+    minNumberFlowsAggr = confPenny["penny"]["execution"]["aggrMinFlows"].get<int>();
 
     /* Apply configs */
     ignoreLegitTraffic = configData["experiment"]["ignoreClosedLoop"]["enabled"].get<bool>();
@@ -462,9 +480,6 @@ int main(int argc, char* argv[])
 
     if (confTopo["topology"]["linkErrorRate"]["downstream"].get<double>() > 0)
     {
-        // std::cout << "downstream loss" <<
-        // confTopo["topology"]["linkErrorRate"]["downstream"].get<double>() <<
-        // std::endl;
         Ptr<PointToPointNetDevice> rts =
             routerToReceiver.Get(0)->GetObject<PointToPointNetDevice>();
         rts->EnableLinkLoss(confTopo["topology"]["linkErrorRate"]["downstream"].get<double>());
@@ -485,15 +500,37 @@ int main(int argc, char* argv[])
 
     Ipv4GlobalRoutingHelper::PopulateRoutingTables();
 
-    /* Set PfifoFastQueueDisc size */
-    Config::SetDefault("ns3::PfifoFastQueueDisc::MaxSize",
-                       QueueSizeValue(QueueSize(QueueSizeUnit::PACKETS, maxQueuePackets)));
+    if (confTopo["topology"]["queueType"].get<std::string>() == "PfifoFastQueueDisc")
+    {
+        /* Set PfifoFastQueueDisc size */
+        Config::SetDefault("ns3::PfifoFastQueueDisc::MaxSize",
+                           QueueSizeValue(QueueSize(QueueSizeUnit::PACKETS, maxQueuePackets)));
 
-    TrafficControlHelper tch;
-    tch.SetRootQueueDisc("ns3::PfifoFastQueueDisc");
-    QueueDiscContainer qd;
-    tch.Uninstall(routers.Get(0)->GetDevice(0));
-    qd.Add(tch.Install(routers.Get(0)->GetDevice(0)).Get(0));
+        TrafficControlHelper tch;
+        tch.SetRootQueueDisc("ns3::PfifoFastQueueDisc");
+        QueueDiscContainer qd;
+        tch.Uninstall(routers.Get(0)->GetDevice(0));
+        qd.Add(tch.Install(routers.Get(0)->GetDevice(0)).Get(0));
+
+    }else if (confTopo["topology"]["queueType"].get<std::string>() == "RedQueueDisc")
+    {
+        Config::SetDefault("ns3::RedQueueDisc::MaxSize", QueueSizeValue(QueueSize(QueueSizeUnit::PACKETS, 1)));
+        Config::SetDefault("ns3::RedQueueDisc::MinTh", DoubleValue(maxQueuePackets - 2));
+        Config::SetDefault("ns3::RedQueueDisc::MaxTh", DoubleValue(maxQueuePackets + 2));
+        Config::SetDefault("ns3::RedQueueDisc::LinkBandwidth", StringValue(StringValue(confTopo["topology"]["bottleneck"]["bandwidth"].get<std::string>())));
+        Config::SetDefault("ns3::RedQueueDisc::LinkDelay", StringValue(StringValue(confTopo["topology"]["bottleneck"]["delay"].get<std::string>())));
+        Config::SetDefault("ns3::RedQueueDisc::MeanPktSize", UintegerValue(configData["other"]["expectedPacketSize"].get<int>()));
+
+        TrafficControlHelper tch;
+        tch.SetRootQueueDisc("ns3::RedQueueDisc");
+        QueueDiscContainer qd;
+        tch.Uninstall(routers.Get(0)->GetDevice(0));
+        qd.Add(tch.Install(routers.Get(0)->GetDevice(0)).Get(0));
+
+    }else
+    {
+        std::cout << "No queue type specified in the topology configuration. Supported queue type values are 'PfifoFastQueueDisc' and 'RedQueueDisc'." << std::endl;
+    }
 
     /* To be able to access packet metadata packet printing must be enabled */
     Packet::EnablePrinting();
@@ -517,17 +554,21 @@ int main(int argc, char* argv[])
             receiverNodeContainer, senderNodeContainer, routerToReceiverIPAddress, configData);
     }
 
-    if (configData["other"]["traces"]["enabled"].get<bool>())
-    {
-        pointToPointRouter.EnableAsciiAll("a");
-    }
-
-    Simulator::Stop(Seconds(configData["simulation"]["stopSimulation"].get<double>()));
-    Simulator::Run();
-
     double dropRate = confPenny["penny"]["dropProbability"].get<double>();
     std::string topoId = confTopo["id"].get<std::string>();
     std::string folderName = configData["experiment"]["folder"].get<std::string>();
+
+
+    if (configData["other"]["traces"]["enabled"].get<bool>())
+    {
+        AsciiTraceHelper ascii;
+        std::string tracesFilename = "tempResults/" + configData["experiment"]["folder"].get<std::string>() + "/" + topoId + "_" + std::to_string(dropRate) + "_" + std::to_string(argSeed) + "-traces.txt";
+        pointToPointRouter.EnableAscii(ascii.CreateFileStream(tracesFilename), senderNodeContainer);
+    }
+
+
+    Simulator::Stop(Seconds(configData["simulation"]["stopSimulation"].get<double>()));
+    Simulator::Run();
 
     writeResults(folderName, argSeed, dropRate, topoId, pennyInstance.exportToJson(false));
 
