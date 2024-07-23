@@ -12,12 +12,10 @@ This repository contains the artifacts for our SIGCOMM '24 paper titled "Bad Pac
  * [Contact](#contact)
 
 ## Prerequisites and Installation Instructions
-The artifacts software is developed using C++ and Python3. Before proceeding with the installation, please ensure the following dependencies are installed on your system:
+The artifacts software is developed using C++ and Python3. **This software requires Ubuntu 22.04.4 LTS, as it has been tested on this platform.** Before proceeding with the installation, please ensure the following dependencies are installed on your system:
 
 #### Step 1: Install Basic Packages
 Open a terminal and execute the following commands to install `cmake`, `g++`,  `python3`, and `gnuplot`:
- 
-For Debian/Ubuntu-based distributions execute the following commands:
 ```bash
 sudo apt update
 sudo apt install cmake g++ python3 gnuplot
@@ -175,8 +173,7 @@ Execute the following command to start the simulations for Figure 9. Replace `<n
 ####  Figure 9a - Performance impact on aggregates
 **Notes:**
  - In this experiment, as we simulate multiple TCP flows as background traffic, the minimum requirements per experiment are `500 MB of disk space` and `2 GB of memory`.
- - After the `.sh` script finishes, ensure that all `./ns3` instances have completed.
-
+ - After the `.sh` script finishes, ensure that all `./ns3` instances have completed, as some may still be running in the background.
 
 ```bash
 bash experiments/figure9a.sh <number_of_parallel_runs> <number_of_experiments>
