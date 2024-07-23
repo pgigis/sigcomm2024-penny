@@ -1,7 +1,7 @@
 {
-	"id": "drop2_min300pkts",
+	"id": "drop1_12pkts",
 	"penny": {
-		"dropProbability": 0.02,
+		"dropProbability": 0.01,
 		"maxDuplicates": 0.15,
 		"probabilityNotObserveRetransmission": 0.05,
 		"timeouts": {
@@ -9,9 +9,9 @@
 		},
 		"execution": {
 			"minClosedLoopFlows": 0,
-			"minPacketDrops": 0,
-			"minDroppablePkts": 300,
-			"maxPacketDrops": 30,
+			"minPacketDrops": 12,
+			"minDroppablePkts": 0,
+			"maxPacketDrops": 12,
 			"aggrMinFlows": 0
 		}
 	}

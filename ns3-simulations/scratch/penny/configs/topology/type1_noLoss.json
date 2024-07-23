@@ -1,4 +1,4 @@
-{	
+{
 	"id": "type1noLoss",
 	"topology": {
 		"bottleneck": {
@@ -14,6 +14,6 @@
 			"upstream": -1,
 			"downstream": -1
 		},
-		"qdiscTypeId": "ns3::PFifoFastQueueDisc"
+		"queueType": "PfifoFastQueueDisc"
 	}
 }

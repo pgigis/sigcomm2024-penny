@@ -14,6 +14,6 @@
 			"upstream": -1,
 			"downstream": 0.03
 		},
-		"qdiscTypeId": "ns3::PFifoFastQueueDisc"
+		"queueType": "PfifoFastQueueDisc"
 	}
 }

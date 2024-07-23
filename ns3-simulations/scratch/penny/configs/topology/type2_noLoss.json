@@ -1,17 +1,17 @@
-{	
-	"id": "type1LossUpstream6",
+{
+	"id": "type2noLoss",
 	"topology": {
 		"bottleneck": {
-			"bandwidth": "10Mbps",
+			"bandwidth": "150Mbps",
 			"delay": "20ms"
 		},
 		"access": {
-			"bandwidth": "20Mbps",
+			"bandwidth": "300Mbps",
 			"delay": "15ms"
 		},
 		"serializationDelay": "5.3ms",
 		"linkErrorRate": {
-			"upstream": 0.06,
+			"upstream": -1,
 			"downstream": -1
 		},
 		"queueType": "PfifoFastQueueDisc"

@@ -310,6 +310,11 @@ PointToPointNetDevice::LogPacketDrop(uint64_t uid, std::string reason)
     outfile.close();
 }
 
+/* Helper function to skip background traffic. */
+bool IsPortInRange(uint16_t port, uint16_t minPort, uint16_t maxPort) {
+    return port >= minPort && port <= maxPort;
+}
+
 /* End of Penny artifact evaluation changes */
 
 bool
