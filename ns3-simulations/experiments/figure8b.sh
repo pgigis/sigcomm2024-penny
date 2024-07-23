@@ -45,7 +45,7 @@ for seed in $(seq 1 "$execution_runs"); do
     done
 done
 
-mkdir -p ../tempResults/accuracyMixedEqualWithDup/
+mkdir -p tempResults/accuracyMixedEqualWithDup/
 
 
 for seed in $(seq 1 "$execution_runs"); do
