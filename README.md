@@ -164,7 +164,7 @@ To do this, first make sure that you are inside the `ns3-simulations` folder.
 
  - Running this minimum number of experiments will produce figures that follow the trends presented in the paper. Note that in the paper, we used 10,000 runs.
 
- - These differences result from the fact that, in our experiments, we randomly schedule new flow(s) to start, which compete with the background traffic in our topology (e.g., in the bottleneck queue). Therefore, to reduce the differences in the generated figures, we recommend increasing the number of experiments beyond the minimum suggested.
+ - Due to the randomness in the simulation process and the number of executions, the generated figures may exhibit minor differences. These differences result from the fact that, in our experiments, we randomly schedule new flow(s) to start, which compete with the background traffic in our topology (e.g., in the bottleneck queue). Therefore, to reduce the differences in the generated figures, we recommend increasing the number of experiments beyond the minimum suggested.
 
 #### Step 1: Run the Experiments
 
