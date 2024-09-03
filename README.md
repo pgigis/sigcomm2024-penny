@@ -1,4 +1,3 @@
-
 # "Bad Packets Come Back, Worse Ones Don't"
 This repository contains the artifacts for our SIGCOMM '24 paper titled "Bad Packets Come Back, Worse Ones Don't."
 
@@ -9,6 +8,7 @@ This repository contains the artifacts for our SIGCOMM '24 paper titled "Bad Pac
     * [NS-3 Simulations](#ns-3-simulations)
         * [Reproducing Accuracy Results](#reproducing-accuracy-results)
         * [Reproducing Perfomance Results](#reproducing-performance-results)
+    * [Reproducing Appendix Results](#reproducing-appendix-results)
  * [Contact](#contact)
 
 ## Prerequisites and Installation Instructions
@@ -194,6 +194,39 @@ python3 pyscripts/plotAggrPerf.py -f tempResults/aggregatesFlowPerformance -o pl
 #### Figure 9b - Performance impact on individual flow
 ```bash
 python3 pyscripts/plotIndivPerf.py -f tempResults/indivFlowPerformance -o plots/indivFlowPerformance.png -p 1000
+```
+
+### Reproducing Appendix Results
+In this section, we provide additional scripts to generate Figures 13 and 14 from the paper.
+
+#### -- Reproducing Figure 13 --
+
+-- Available soon...
+
+#### -- Reproducing Figure 14 --
+
+#### Step 1: Run the Experiments
+Execute the following command to start the simulations for Figure 14. Replace `<number_of_parallel_runs>` and `<number_of_experiments>` with the appropriate values for your setup:
+
+#### Figure 14a - Mixed 20/80 closed-loop/not closed loop flows
+```bash
+bash experiments/figure14a_appendix.sh <number_of_parallel_runs> <number_of_experiments>
+```
+#### Figure 14b - Mixed 10/90 closed-loop/not closed loop flows
+```bash
+bash experiments/figure14b_appendix.sh <number_of_parallel_runs> <number_of_experiments>
+```
+
+#### Step 2: Plot the Results
+To generate the plots for Figure 14 execute the following commands:
+
+#### Figure 14a - Mixed 20/80 closed-loop/not closed loop flows
+```bash
+python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixed20 -o plots/accuracyMixed20.png
+```
+#### Figure 14b - Mixed 10/90 closed-loop/not closed loop flows
+```bash
+python3 pyscripts/plotAccuracy.py -f tempResults/accuracyMixed10 -o plots/accuracyMixed10.png
 ```
 
 ## Contact
