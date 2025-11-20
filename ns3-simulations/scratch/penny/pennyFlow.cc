@@ -24,11 +24,12 @@ int pennyFlow::processPacket(struct simplePacket pkt)
      */
     bool uniqPayload = isPayloadUnique(pkt.seq, pkt.payloadSize);
 
+    bool isOutOfSequence = false;
     /* Check if the packet has the highest SEQ number we have seen so far */
     if (pkt.seq < highestSeq && uniqPayload)
     {
         curCounters.outOfOrderPkts++;
-        addPktToSeqIntervalTree(pkt.seq, pkt.payloadSize);
+        isOutOfSequence = true;
     }
     else
     {
@@ -45,7 +46,9 @@ int pennyFlow::processPacket(struct simplePacket pkt)
     {
         addPktToSeqIntervalTree(pkt.seq, pkt.payloadSize);
         curCounters.droppablePkts++;
-        isDroppable = true;
+        if (!isOutOfSequence) {
+            isDroppable = true;
+        }
     }
     else
     {
